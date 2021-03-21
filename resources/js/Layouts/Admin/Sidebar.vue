@@ -32,9 +32,9 @@
     </div>
 
     <div class="mt-10">
-      <a
+      <inertia-link
         class="flex items-center mt-4 py-2 px-6 bg-gray-700 bg-opacity-25 text-gray-100"
-        href="./admin.html"
+        :href="route('admin.home')"
       >
         <svg
           class="h-6 w-6"
@@ -52,11 +52,11 @@
         </svg>
 
         <span class="mx-3">Dashboard</span>
-      </a>
+      </inertia-link>
 
-      <a
+      <inertia-link
         class="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
-        href="./posts.html"
+        :href="route('admin.posts.index')"
       >
         <svg
           class="h-6 w-6"
@@ -74,11 +74,13 @@
         </svg>
 
         <span class="mx-3">Posts</span>
-      </a>
+      </inertia-link>
 
-      <a
+      <inertia-link
         class="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
-        href="/forms"
+        :href="route('logout')"
+        as="button"
+        method="post"
       >
         <svg
           class="h-6 w-6"
@@ -96,7 +98,7 @@
         </svg>
 
         <span class="mx-3">Logout</span>
-      </a>
+      </inertia-link>
     </div>
   </div>
 </template>

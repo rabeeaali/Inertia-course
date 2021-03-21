@@ -5,8 +5,10 @@
     >
       <div class="flex justify-between items-center">
         <div>
-          <a href="#" class="text-gray-800 text-xl font-bold md:text-2xl"
-            >Brand</a
+          <inertia-link
+            :href="route('user.home')"
+            class="text-gray-800 text-xl font-bold md:text-2xl"
+            >Brand</inertia-link
           >
         </div>
         <div>
@@ -23,34 +25,46 @@
         </div>
       </div>
       <div class="md:flex flex-col items-center md:flex-row md:-mx-4 hidden">
-        <a
-          href="#"
-          class="my-1 text-gray-800 hover:text-blue-500 md:mx-4 md:my-0"
-          >Rabeea</a
-        >
-        <a
-          href="#"
-          class="my-1 text-gray-800 hover:text-blue-500 md:mx-4 md:my-0"
-          >Logout</a
-        >
-
-        <a
-          href="login.html"
-          class="my-1 text-gray-800 hover:text-blue-500 md:mx-4 md:my-0"
-          >Login</a
-        >
-        <a
-          href="register.html"
-          class="my-1 text-gray-800 hover:text-blue-500 md:mx-4 md:my-0"
-          >Register</a
-        >
+        <template v-if="userAuth">
+          <a
+            href="#"
+            class="my-1 text-gray-800 hover:text-blue-500 md:mx-4 md:my-0"
+            >{{ userAuth.name }}</a
+          >
+          <inertia-link
+            :href="route('logout')"
+            as="button"
+            method="post"
+            class="my-1 text-gray-800 hover:text-blue-500 md:mx-4 md:my-0"
+          >
+            Logout
+          </inertia-link>
+        </template>
+        <template v-else>
+          <inertia-link
+            :href="route('login')"
+            class="my-1 text-gray-800 hover:text-blue-500 md:mx-4 md:my-0"
+            >Login
+          </inertia-link>
+          <inertia-link
+            :href="route('register')"
+            class="my-1 text-gray-800 hover:text-blue-500 md:mx-4 md:my-0"
+            >Register
+          </inertia-link>
+        </template>
       </div>
     </div>
   </nav>
 </template>
 
 <script>
-export default {};
+export default {
+  computed: {
+    userAuth() {
+      return this.$page.props.auth.user;
+    },
+  },
+};
 </script>
 
 <style>

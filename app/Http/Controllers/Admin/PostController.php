@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Post;
 use Inertia\Inertia;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostRequest;
 
 class PostController extends Controller
 {
@@ -16,9 +16,15 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::get();
+        $posts = Post::query()
+            ->when(
+                request('search'),
+                fn ($query) => $query->where('name', 'LIKE', '%' . request('search') . '%')
+            )
+            ->latest()
+            ->paginate(5);
 
-        return Inertia::render('Admin/Posts/Index',compact('posts'));
+        return Inertia::render('Admin/Posts/Index', compact('posts'));
     }
 
     /**
@@ -28,7 +34,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Admin/Posts/Create');
     }
 
     /**
@@ -37,20 +43,13 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-        //
-    }
+        Post::create($request->validated());
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Post $post)
-    {
-        //
+        return redirect()
+            ->route('admin.posts.index')
+            ->with('message', 'Post Added');
     }
 
     /**
@@ -61,7 +60,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return Inertia::render('Admin/Posts/Edit', compact('post'));
     }
 
     /**
@@ -71,9 +70,13 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(PostRequest $request, Post $post)
     {
-        //
+        $post->update($request->validated());
+
+        return redirect()
+            ->route('admin.posts.index')
+            ->with('message', 'Post Updated');
     }
 
     /**
@@ -84,6 +87,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+
+        return redirect()
+            ->route('admin.posts.index')
+            ->with('message', 'Post Deleted');
     }
 }
